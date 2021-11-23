@@ -1,14 +1,22 @@
 package org.devlos.practicemsaredecorder.domain.partner;
 
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.devlos.practicemsaredecorder.common.util.TokenGenerator;
 import org.devlos.practicemsaredecorder.domain.AbstractEntity;
 
 import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
 import java.security.InvalidParameterException;
 
+@Slf4j
+@Getter
+@NoArgsConstructor
+@Table(name = "partners")
 public class Partner extends AbstractEntity {
     private static final String PREFIX_PARTNER = "ptn_";
 
@@ -30,11 +38,24 @@ public class Partner extends AbstractEntity {
         private final String description;
     }
 
+    @Builder
     public Partner(String partnerName, String businessNo, String email) {
         if (StringUtils.isEmpty(partnerName)) throw new InvalidParameterException("empty partnerName");
         if (StringUtils.isEmpty(businessNo)) throw new InvalidParameterException("empty businessNo");
         if (StringUtils.isEmpty(email)) throw new InvalidParameterException("empty email");
         
-//        this.partnerToken = TokenGenerator.
+        this.partnerToken = TokenGenerator.randomCharacterWithPrefix(PREFIX_PARTNER);
+        this.partnerName = partnerName;
+        this.businessNo = businessNo;
+        this.email = email;
+        this.status = Status.ENABLE;
+    }
+
+    public void enable() {
+        this.status = Status.ENABLE;
+    }
+
+    public void disable() {
+        this.status = Status.DISABLE;
     }
 }

@@ -1,0 +1,48 @@
+package org.devlos.practicemsaredecorder.domain.partner;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class PartnerServiceImpl implements PartnerService {
+    // 파트너 저장
+    private final PartnerStore partnerStore;
+    // 파트너 조회
+    private final PartnerReader partnerReader;
+
+
+    @Override
+    @Transactional
+    public PartnerInfo registerPartner(PartnerCommand command) {
+        Partner initPartner = command.toEntity();
+        Partner partner = partnerStore.store(initPartner);
+        return new PartnerInfo(partner);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PartnerInfo getPartnerInfo(String partnerToken) {
+        Partner partner = partnerReader.getPartner(partnerToken);
+        return new PartnerInfo(partner);
+    }
+
+    @Override
+    @Transactional
+    public PartnerInfo enablePartner(String partnerToken) {
+        Partner partner = partnerReader.getPartner(partnerToken);
+        partner.enable();
+        return new PartnerInfo(partner);
+    }
+
+    @Override
+    @Transactional
+    public PartnerInfo disablePartner(String partnerToken) {
+        Partner partner = partnerReader.getPartner(partnerToken);
+        partner.disable();
+        return new PartnerInfo(partner);
+    }
+}
