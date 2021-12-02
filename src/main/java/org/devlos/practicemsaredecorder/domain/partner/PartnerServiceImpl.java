@@ -14,7 +14,6 @@ public class PartnerServiceImpl implements PartnerService {
     // 파트너 조회
     private final PartnerReader partnerReader;
 
-
     @Override
     @Transactional
     public PartnerInfo registerPartner(PartnerCommand command) {
